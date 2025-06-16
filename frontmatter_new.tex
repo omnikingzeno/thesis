@@ -1,0 +1,239 @@
+\frontmatter% Use roman page numbering style (i, ii, iii, iv...) for the pre-content pages
+
+\pagestyle{plain} % Default to the plain heading style until the thesis style is called for the body content
+%----------------------------------------------------------------------------------------
+%	TITLE PAGE
+%----------------------------------------------------------------------------------------
+
+\begin{titlepage}
+\begin{center}
+\begin{spacing}{1.2}
+
+{\huge \bfseries When Fine-Tuning Fails: Lessons from MS MARCO Passage Ranking\par}  % Thesis title
+
+\vspace {5mm}
+\textit{A thesis submitted in partial fulfillment of the requirements\\for the award of the degree of} 
+
+\vspace{7mm}
+\textsc{\huge MASTER OF TECHNOLOGY}
+
+\vspace {3mm}
+\begin{figure}[htp]
+    \centering
+    \includegraphics[scale=0.28]{Figures/IIITA_Logo.png}
+\end{figure}
+% ************************************
+\begin{minipage}[t]{0.5\textwidth}
+    \begin{flushleft} \large
+        \textit{By:-} \\%[2mm]
+            \textsc{MANU PANDE} % Student Names
+    \end{flushleft}
+\end{minipage}
+\begin{minipage}[t]{0.45\textwidth}
+    \begin{flushright} \large
+        \textit{Enrollment No.} \\
+            \textsc{MML2023005} % Student Enrollment numbers
+    \end{flushright}
+\end{minipage}\\[1cm]
+% *************************************
+
+\textit{Under the Supervision of}\\[2mm]
+\textsc{\Large Dr. Muneendra Ojha}\\% Supervisor's Name
+
+\vspace{7mm}
+\textit{to the}\\[2mm]
+\textsc{\Large Department of Information Technology}\\ % Department
+
+\vspace{8mm}
+\begin{otherlanguage}{hindi}
+    \textsc{\Large {भारतीय सूचना प्रौद्योगिकी संस्थान, इलाहाबाद}} \\
+\end{otherlanguage}
+\vspace{3mm}
+\textsc{\Large Indian Institute of Information Technology, Allahabad} % university
+
+\vspace{5mm}
+{\fontsize{14}{14}\selectfont \text{May , 2025}}
+
+\end{spacing}
+\end{center}
+\end{titlepage}
+
+%----------------------------------------------------------------------------------------
+%	DECLARATION
+%----------------------------------------------------------------------------------------
+\checktoopen
+\begin{figure}[htp]
+    % \centering
+    \includegraphics[height=3cm,keepaspectratio]{./IIITA_Header.png}
+\end{figure}
+% \string\setblankpagestyle \space
+\thispagestyle{empty}
+\vspace{1mm}
+
+\begin{center}
+    {\large\bfseries CANDIDATE DECLARATION}
+\end{center}
+
+\begin{spacing}{1.5}
+\addchaptertocentry{CANDIDATE DECLARATION}
+\vspace{10 pt}
+I hereby declare that work presented in the report entitled "\textbf{When Fine-Tuning Fails: Lessons from MS MARCO Passage Ranking}", submitted towards the fulfillment of MASTER'S THESIS report of M.Tech at Indian Institute of Information Technology Allahabad, is an authenticated original work carried out under supervision of \textbf{Dr. Muneendra Ojha}. Due Acknowledgements have been made in the text to all other material used. the project was done in full compliance with the requirements and constraints of the prescribed curriculum. 
+\end{spacing}
+
+\begin{spacing}{2.0}
+\begin{flushright}
+    \begin{minipage}{0.5\textwidth}
+        \flushright \vspace{60 pt}
+        \underline{\hspace{6cm}} \\
+        \makebox[6cm]{\textbf{Manu Pande - MML2023005}} \\[80pt]
+    \end{minipage}
+\end{flushright}
+\end{spacing}
+\newpage
+
+%----------------------------------------------------------------------------------------
+%	CERTIFICATE
+%----------------------------------------------------------------------------------------
+\checktoopen
+\begin{figure}[htp]
+    % \centering
+    \includegraphics[height=3cm,keepaspectratio]{./IIITA_Header.png}
+\end{figure}
+% \string\setblankpagestyle \space
+\thispagestyle{empty}
+\vspace*{.06\textheight}
+
+\begin{spacing}{1.5}
+\addchaptertocentry{CERTIFICATE FROM SUPERVISORS}
+\begin{center}
+    {\centering\large\bfseries CERTIFICATE FROM SUPERVISORS\par\vspace{10pt}}
+\end{center}
+
+\noindent It is certified that the work contained in the thesis titled \enquote{\textbf{When Fine-Tuning Fails: Lessons from MS MARCO Passage Ranking}} by \textbf{Manu Pande} has been carried out under supervision of \textbf{Dr. Muneendra Ojha} and that this work has not been submitted elsewhere for a degree.
+
+\vspace{3.5cm}
+
+\hfill\begin{minipage}{7.5cm}
+    \begin{spacing}{1.2}
+        \par
+        \rule{\textwidth}{0.2pt}\\
+        {Dr. Muneendra Ojha} \par
+        {\deptname}  \par
+        IIIT Allahabad \par
+    \end{spacing}
+\end{minipage}
+
+\end{spacing}
+% \end{certificate}
+\cleardoublepage
+
+\begin{figure}[htp]
+    % \centering
+    \includegraphics[height=3cm,keepaspectratio]{./IIITA_Header.png}
+\end{figure}
+% \string\setblankpagestyle \space
+\thispagestyle{empty}
+\vspace*{.06\textheight}
+
+\begin{spacing}{1.5}
+\addchaptertocentry{CERIFICATE OF APPROVAL}
+\begin{center}
+    {\centering\large\bfseries CERTIFICATE OF APPROVAL \par\vspace{10pt}}
+\end{center}
+
+ This thesis entitled \textbf{When Fine-Tuning Fails: Lessons from MS MARCO Passage Ranking}  by \textbf{Manu Pande} (MML2023005) is approved for the degree of Master's thesis at IIIT Allahabad  It is understood that by this approval, the undersigned does not necessarily endorse or approve any statement made, opinion expressed, or conclusion drawn
+therein but approves the thesis only for the purpose for which it is submitted."\\[40 pt]
+
+ Signature and name of the committee members (on final examination and approval of the thesis): \\[10 pt]
+ \begin{flushleft}
+     \begin{enumerate}
+         \item Dr. Muneendra Ojha \\[25pt]
+         \item Dr. [Committee Member 2]\\[25 pt]
+         \item Dr. [Committee Member 3] \\[25 pt]
+     \end{enumerate}
+ \end{flushleft}
+ \vspace{20 pt}
+ \begin{flushright}
+     \begin{minipage}{0.5\textwidth}
+        \flushright \vspace{60 pt}
+        \underline{\hspace{6cm}} \\
+        \makebox[6cm]{\textbf{Dean(A\&R)}} \\[80pt]
+    \end{minipage}
+ \end{flushright}
+\end{spacing} 
+
+\newpage
+
+\begin{figure}[htp]
+    % \centering
+    \includegraphics[height=3cm,keepaspectratio]{./IIITA_Header.png}
+\end{figure}
+% \string\setblankpagestyle \space
+\thispagestyle{empty}
+\vspace{1mm}
+
+\begin{center}
+    {\large\bfseries ACKNOWLEDGEMENT}
+\end{center}
+
+\begin{spacing}{1.5}
+\addchaptertocentry{ACKNOWLEDGEMENT}
+I am thankful to my project supervisor, \textbf{Dr. Muneendra Ojha} for the guidance, support, and invaluable feedback throughout the research process. Their expertise, encouragement, and patience have been instrumental in the completion of this thesis.\\[10pt] 
+
+I am grateful to the faculty and staff of the Department of Information Technology at IIIT Allahabad for their support throughout my research journey. I would also like to thank the Indian Institute of Information Technology, Allahabad for providing the necessary resources and facilities to conduct this research.\\[10pt]
+
+I acknowledge Modal.com for providing the computational resources that enabled this comprehensive experimental investigation. Finally, I am deeply grateful to my family and friends for their unwavering support and encouragement throughout this academic pursuit. \\[30 pt]
+\end{spacing}
+
+\begin{spacing}{2.0}
+\begin{flushright}
+    \begin{minipage}{0.5\textwidth}
+        \flushright \vspace{60 pt}
+        \underline{\hspace{6cm}} \\
+        \makebox[6cm]{\textbf{Manu Pande - MML2023005}} \\[80pt]
+    \end{minipage}
+\end{flushright}
+\end{spacing}
+\newpage
+
+\begin{center}
+    {\large\bfseries ABSTRACT}
+\end{center}
+\begin{spacing}{1.5}
+\addchaptertocentry{ABSTRACT} % Add the abstract to the table of contents
+This thesis investigates the counterintuitive phenomenon where fine-tuning pre-trained transformer models degrades performance on the MS MARCO passage ranking task. Through comprehensive experiments involving five model variants—including full parameter fine-tuning and parameter-efficient LoRA adaptations—we demonstrate that all fine-tuning approaches underperform the base sentence-transformers/all-MiniLM-L6-v2 model (MRR@10: 0.3026). 
+
+Our analysis reveals that fine-tuning disrupts the optimal embedding space structure learned during the base model's extensive pre-training on 1 billion sentence pairs, including 9.1 million MS MARCO samples. UMAP visualizations show progressive embedding space flattening, while training dynamics analysis and computational efficiency metrics further support our findings. These results challenge conventional wisdom about transfer learning effectiveness on saturated benchmarks and suggest architectural innovations may be necessary for meaningful improvements.
+
+The key contributions include empirical demonstration of universal fine-tuning failure on saturated benchmarks, scale disparity analysis showing how focused fine-tuning experiments cannot compete with billion-scale pre-training, and diagnostic methodology using embedding space visualization to understand model behavior beyond traditional metrics when working with pre-optimized models. This work provides crucial insights for the information retrieval community about the limitations of conventional fine-tuning approaches on heavily optimized baseline models.
+\end{spacing}
+
+\newpage
+
+%----------------------------------------------------------------------------------------
+%	LIST OF CONTENTS/FIGURES/TABLES PAGES
+%----------------------------------------------------------------------------------------
+\addchaptertocentry{Table of Contents}
+\tableofcontents % Prints the main table of contents
+\listoffigures
+\listoftables
+
+%----------------------------------------------------------------------------------------
+%	ABBREVIATIONS
+%----------------------------------------------------------------------------------------
+\chapter*{List of Abbreviations}
+\addcontentsline{toc}{chapter}{List of Abbreviations}
+\begin{tabular}{@{}ll}
+MS MARCO & Microsoft MAchine Reading COmprehension \\
+MRR & Mean Reciprocal Rank \\
+LoRA & Low-Rank Adaptation \\
+SBERT & Sentence-BERT \\
+UMAP & Uniform Manifold Approximation and Projection \\
+IR & Information Retrieval \\
+NLP & Natural Language Processing \\
+TPU & Tensor Processing Unit \\
+GPU & Graphics Processing Unit \\
+QPS & Queries Per Second \\
+BM25 & Best Matching 25 \\
+DPR & Dense Passage Retrieval \\
+\end{tabular}

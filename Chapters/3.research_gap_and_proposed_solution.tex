@@ -1,0 +1,151 @@
+% Chapter 3
+
+\chapter{Research Gap and Proposed Solution} % Main chapter title
+
+\label{Chapter3} % For referencing the chapter elsewhere, use \ref{Chapter3}
+
+%----------------------------------------------------------------------------------------
+
+This chapter identifies the specific research gaps that motivate our investigation and presents our proposed approach to address these gaps. We build upon the literature review to articulate the unique challenges posed by fine-tuning on saturated benchmarks.
+
+\section{Identified Research Gaps}
+
+\subsection{The Saturated Benchmark Problem}
+
+Traditional fine-tuning research assumes that models are being adapted to new or unseen domains. However, modern pre-trained models often undergo extensive domain-specific training during their initial development. The sentence-transformers/all-MiniLM-L6-v2 model, for instance, was pre-trained on over 1 billion sentence pairs, including 9,144,553 samples specifically from MS MARCO.
+
+This creates a fundamental gap in our understanding: \textit{What happens when we attempt to fine-tune models on benchmarks they have already extensively seen during pre-training?}
+
+\subsection{Scale Disparity in Fine-Tuning}
+
+Current fine-tuning research often focuses on maximizing performance through larger datasets and longer training. However, there is insufficient understanding of the implications when fine-tuning datasets are orders of magnitude smaller than the original pre-training data.
+
+The scale disparity between billion-sample pre-training and million-sample fine-tuning represents a significant methodological challenge that has received limited systematic investigation.
+
+\subsection{Embedding Space Diagnostics}
+
+While performance metrics like MRR and NDCG provide valuable insights into model effectiveness, they offer limited understanding of \textit{why} certain fine-tuning approaches fail. There is a critical need for diagnostic tools that can reveal the underlying geometric changes in embedding spaces during fine-tuning.
+
+\subsection{Parameter-Efficient Methods on Saturated Models}
+
+LoRA and similar parameter-efficient methods have been extensively evaluated on tasks where models are being adapted to new domains. However, their behavior when applied to already domain-optimized models remains poorly understood, particularly in terms of:
+
+\begin{itemize}
+\item Computational efficiency during inference
+\item Sensitivity to different negative sampling strategies
+\item Impact on embedding space geometry
+\end{itemize}
+
+\section{Proposed Investigation Framework}
+
+\subsection{Multi-Variant Experimental Design}
+
+To address these gaps, we propose a comprehensive experimental framework involving five model variants:
+
+\begin{enumerate}
+\item \textbf{Base SBERT:} The unmodified sentence-transformers/all-MiniLM-L6-v2 model serving as our baseline
+\item \textbf{Full Fine-Tuning variants:} Complete parameter optimization with different negative sampling strategies
+\item \textbf{LoRA variants:} Parameter-efficient adaptation with matched negative sampling approaches
+\end{enumerate}
+
+This design allows us to systematically evaluate the impact of both fine-tuning approach and negative sampling strategy on saturated benchmarks.
+
+\subsection{Embedding Space Analysis Methodology}
+
+We propose using UMAP (Uniform Manifold Approximation and Projection) visualization as a primary diagnostic tool. UMAP provides several advantages for embedding space analysis:
+
+\begin{itemize}
+\item Preservation of both local and global structure
+\item Ability to visualize high-dimensional relationships in 2D space
+\item Sensitivity to clustering and separation patterns
+\item Consistency across multiple runs
+\end{itemize}
+
+By visualizing embedding spaces before and after fine-tuning, we can directly observe the geometric changes that correlate with performance degradation.
+
+\subsection{Computational Efficiency Analysis}
+
+Beyond traditional performance metrics, we propose comprehensive computational efficiency analysis including:
+
+\begin{itemize}
+\item Wall-clock inference time measurements
+\item Queries per second (QPS) calculations
+\item Memory usage profiling
+\item Training time and convergence analysis
+\end{itemize}
+
+This analysis will reveal hidden costs in parameter-efficient methods that may not be apparent from parameter counts alone.
+
+\section{Hypotheses}
+
+Based on our analysis of the research gaps, we formulate the following testable hypotheses:
+
+\subsection{H1: Universal Fine-Tuning Degradation}
+
+\textit{All fine-tuning approaches will underperform the base model on MS MARCO due to the model's extensive prior exposure to the domain during pre-training.}
+
+This hypothesis challenges the conventional assumption that fine-tuning universally improves performance and suggests that saturated benchmarks require different evaluation frameworks.
+
+\subsection{H2: Hard Negatives Paradox}
+
+\textit{Hard negative sampling, typically beneficial for retrieval tasks, will harm performance more than random negative sampling when applied to saturated models.}
+
+This hypothesis suggests that sophisticated negative sampling strategies may introduce harmful noise when models have already learned optimal representations for the domain.
+
+\subsection{H3: Embedding Space Degradation}
+
+\textit{Fine-tuning will cause progressive degradation of embedding space structure, manifesting as increased uniformity and loss of semantic clustering.}
+
+This hypothesis proposes a geometric explanation for fine-tuning failures that can be visualized and quantified through embedding space analysis.
+
+\subsection{H4: LoRA Computational Overhead}
+
+\textit{LoRA models will exhibit unexpected computational overhead during inference despite their parameter efficiency.}
+
+This hypothesis challenges assumptions about the deployment advantages of parameter-efficient methods.
+
+\section{Evaluation Framework}
+
+\subsection{Performance Metrics}
+
+We will employ standard information retrieval metrics:
+
+\begin{itemize}
+\item \textbf{Mean Reciprocal Rank (MRR)} at cutoffs 10 and 100
+\item \textbf{Inference time} for processing standardized query sets
+\item \textbf{Training convergence} metrics and computational requirements
+\end{itemize}
+
+\subsection{Diagnostic Metrics}
+
+Beyond performance metrics, we will introduce diagnostic measures:
+
+\begin{itemize}
+\item \textbf{Embedding space visualization} through UMAP projections
+\item \textbf{Visual assessment} of clustering and separation patterns
+\item \textbf{Training dynamics analysis} through loss curve examination
+\end{itemize}
+
+\section{Expected Contributions}
+
+This investigation framework is designed to make several key contributions to the information retrieval and fine-tuning literature:
+
+\begin{enumerate}
+\item \textbf{Empirical evidence} for fine-tuning limitations on saturated benchmarks
+\item \textbf{Diagnostic methodology} for understanding fine-tuning failures through embedding space analysis
+\item \textbf{Computational efficiency insights} for parameter-efficient methods in production environments
+\item \textbf{Theoretical framework} for understanding scale disparities in transfer learning
+\end{enumerate}
+
+\section{Methodological Rigor}
+
+Our proposed approach emphasizes methodological rigor through:
+
+\begin{itemize}
+\item \textbf{Controlled experimental conditions} with consistent hyperparameters across variants
+\item \textbf{Reproducible infrastructure} using well-documented cloud computing resources
+\item \textbf{Open science practices} with public availability of code and datasets
+\item \textbf{Comprehensive evaluation} of all reported results
+\end{itemize}
+
+This rigorous approach ensures that our findings will be reliable and reproducible, contributing meaningful insights to the research community's understanding of fine-tuning limitations on saturated benchmarks.

@@ -1,0 +1,233 @@
+% Chapter 4
+
+\chapter{Methodology} % Main chapter title
+
+\label{Chapter4} % For referencing the chapter elsewhere, use \ref{Chapter4}
+
+%------------------------------------------------------------------
+
+\section{Reproducibility and Open Science}
+
+To support reproducibility and further research, we provide open access to:
+
+\begin{itemize}
+\item \textbf{Source Code:} Complete implementation available at \url{https://github.com/omnikingzeno/ms-marco-fine-tuning-experiments}
+\item \textbf{Custom Hard Negatives Dataset:} Available at \url{https://huggingface.co/datasets/manupande21/}
+\item \textbf{Fine-tuned Models:} All model variants available at \url{https://huggingface.co/manupande21/}
+\item \textbf{Experimental Logs:} Training curves and detailed metrics included in repository
+\item \textbf{Visualization Code:} UMAP generation and analysis scripts in repository
+\end{itemize}
+
+\subsection{Software Environment}
+
+All experiments were conducted using:
+\begin{itemize}
+\item \textbf{Python Version:} 3.11.5 (CPython)
+\item \textbf{Exact Requirements:} Complete dependency specifications and exact package versions for each fine-tuned model variant are available in the requirements files at the code repository: \url{https://github.com/omnikingzeno/ms-marco-fine-tuning-experiments}
+\end{itemize}
+
+This chapter presents our comprehensive experimental methodology for investigating fine-tuning failures on the MS MARCO passage ranking task. We detail our dataset construction, model configurations, training procedures, and evaluation protocols.
+
+\section{Dataset and Preprocessing}
+
+\subsection{MS MARCO Dataset Overview}
+
+The MS MARCO passage ranking dataset comprises 8,841,823 passages extracted from web documents, with 1,010,916 training queries and sparse relevance judgments \cite{msmarco}. Each query is associated with one or more relevant passages, creating a challenging retrieval scenario where systems must identify relevant content from a large corpus.
+
+For our experiments, we utilized:
+\begin{itemize}
+\item \textbf{Training queries:} 808,731 unique queries from queries.train.tsv
+\item \textbf{Collection:} 8,841,823 passages from collection.tsv
+\item \textbf{Evaluation:} qrels.dev.tsv containing 55,578 query-passage relevance judgments
+\end{itemize}
+
+\subsection{Dataset Construction Strategy}
+
+Given the computational constraints and research objectives, we constructed two distinct training datasets to investigate the impact of negative sampling strategies on an already domain-adapted model.
+
+\subsubsection{Random Negatives Dataset}
+
+We randomly sampled 1 million triplets from the original triples.train.small.tsv file, maintaining the distribution of queries and ensuring diverse negative examples. This approach follows standard practice in neural ranking literature and provides a baseline for negative sampling effectiveness.
+
+The random sampling process ensured:
+\begin{itemize}
+\item Uniform distribution across different query types
+\item Preservation of original positive-negative ratio patterns
+\item Diverse negative examples from across the passage collection
+\end{itemize}
+
+\subsubsection{Hard Negatives Dataset}
+
+We constructed 503,000 hard negative triplets using a sophisticated methodology designed to challenge the model with semantically similar but non-relevant passages:
+
+\begin{enumerate}
+\item For each training query, we retrieved the top-200 passages using the base model
+\item We randomly sampled a passage from ranks 51 to 200 (excluding known positives) as the hard negative
+\item This approach ensures negatives are semantically similar but non-relevant, avoiding reliance on BM25 \cite{robertson2009probabilistic} for negative mining
+\end{enumerate}
+
+This methodology creates challenging negative examples that are likely to be semantically related to the query but lack the specific relevance captured in the ground truth labels.
+
+\section{Model Architectures and Configurations}
+
+\subsection{Base Model Architecture}
+
+The sentence-transformers/all-MiniLM-L6-v2 model employs a dual-encoder Siamese network architecture \cite{dong2022exploring} with the following mathematical formulation:
+
+\begin{equation}
+E_q = \text{MiniLM}(q), \quad E_p = \text{MiniLM}(p)
+\end{equation}
+
+\begin{equation}
+\text{sim}(q,p) = \frac{E_q \cdot E_p}{||E_q|| \cdot ||E_p||}
+\end{equation}
+
+where $E_q$ and $E_p$ represent 384-dimensional embeddings for query $q$ and passage $p$ respectively.
+
+The model architecture consists of:
+\begin{itemize}
+\item 6 transformer layers
+\item 384 hidden dimensions  
+\item 12 attention heads
+\item 22.7 million total parameters
+\item Vocabulary size: 30,522 tokens
+\end{itemize}
+
+\subsection{Pre-training Exposure Analysis}
+
+Critically, this model underwent extensive domain-specific fine-tuning using self-supervised contrastive learning objectives on over 1 billion sentence pairs \cite{huggingface_minilm}. The training procedure utilized:
+
+\begin{itemize}
+\item \textbf{Hardware:} 7 TPU v3-8 cores for efficient computation
+\item \textbf{Pre-training steps:} 100,000 with batch size 1,024
+\item \textbf{MS MARCO exposure:} 9,144,553 sentence pairs specifically from MS MARCO
+\item \textbf{Learning strategy:} Contrastive learning with cross-entropy loss and learning rate warm-up
+\end{itemize}
+
+This extensive pre-training established the model as highly optimized for semantic search tasks, particularly those involving MS MARCO-style query-passage relationships.
+
+\subsection{Model Variants}
+
+Our experimental design encompasses five model configurations to systematically evaluate different fine-tuning approaches:
+
+\begin{enumerate}
+\item \textbf{Base SBERT:} Unmodified sentence-transformers/all-MiniLM-L6-v2 (pre-trained on 1B pairs including 9.1M MS MARCO samples)
+\item \textbf{Full FT (Random):} Full parameter fine-tuning on 1M random negatives
+\item \textbf{Full FT (Hard):} Full parameter fine-tuning on 503K hard negatives
+\item \textbf{LoRA FT (Random):} LoRA adaptation (r=16, $\alpha$=32) on 1M random negatives  
+\item \textbf{LoRA FT (Hard):} LoRA adaptation (r=16, $\alpha$=32) on 503K hard negatives
+\end{enumerate}
+
+\subsection{LoRA Configuration}
+
+The LoRA configuration targets query and value projection matrices in the attention layers, representing approximately 3.9\% of the total model parameters while maintaining expressive capacity for task adaptation. The mathematical formulation follows:
+
+\begin{equation}
+W_{q/v}' = W_{q/v} + \Delta W = W_{q/v} + B A
+\end{equation}
+
+where $B \in \mathbb{R}^{384 \times 16}$ and $A \in \mathbb{R}^{16 \times 384}$ are the trainable low-rank matrices with rank $r=16$ and scaling factor $\alpha=32$.
+
+\subsubsection{Parameter Count Calculation}
+
+The 3.9\% figure represents the proportion of trainable LoRA parameters relative to the total model parameters. The detailed calculation follows:
+
+\textbf{Base Model Parameters:}
+\begin{itemize}
+\item Total parameters in sentence-transformers/all-MiniLM-L6-v2: 22,713,216
+\item This includes embedding layers, 6 transformer blocks, and pooling components
+\end{itemize}
+
+\textbf{LoRA Trainable Parameters:}
+
+In LoRA fine-tuning, the number of trainable parameters depends on the rank ($r$) and the number of affected matrices. Since LoRA modifies the query and value projection matrices in the multi-head attention mechanism, we calculate the total parameters when rank = 16.
+
+Each query and value projection matrix in MiniLM-L6-v2 has a shape of $384 \times 384$ per attention head. LoRA replaces these with low-rank matrices of shape $384 \times 16$ and $16 \times 384$, meaning each head contributes:
+
+\begin{equation}
+(384 \times 16) + (16 \times 384) = 12,288 \text{ parameters per head}
+\end{equation}
+
+Since there are 12 attention heads per layer and 6 layers, the total number of trainable LoRA parameters is:
+
+\begin{equation}
+12,288 \times 12 \times 6 = 884,736 \text{ parameters}
+\end{equation}
+
+\begin{equation}
+\text{Percentage} = \frac{884,736}{22,713,216} \times 100\% = 3.9\%
+\end{equation}
+
+This parameter efficiency demonstrates LoRA's ability to achieve task adaptation with minimal parameter overhead while preserving the original model's knowledge.
+
+\section{Infrastructure and Computational Setup}
+
+\subsection{Hardware Configuration}
+
+All experiments were conducted on a remote system provided by Modal.com featuring:
+\begin{itemize}
+\item NVIDIA A100 80GB GPU
+\item 1.2TB RAM
+\item High-bandwidth network connectivity
+\end{itemize}
+
+This high-performance setup provided substantial computational capability for our experiments while ensuring reproducible conditions across all model variants.
+
+\subsection{Training Configuration}
+
+Consistent training hyperparameters were maintained across all fine-tuning experiments to ensure fair comparison:
+
+\begin{itemize}
+\item \textbf{Optimizer:} AdamW with $\beta_1=0.9, \beta_2=0.999$
+\item \textbf{Learning rate:} 2e-5 with linear warmup (1,000 steps)
+\item \textbf{Batch size:} 128 (limited by GPU memory constraints)
+\item \textbf{Epochs:} 5 for Full FT (Hard), 3 for all others
+\item \textbf{Gradient clipping:} 1.0 to prevent gradient explosion
+\item \textbf{Weight decay:} 0.01 for regularization
+\end{itemize}
+
+\section{Evaluation Protocol}
+
+\subsection{Performance Metrics}
+
+Performance evaluation employed standard information retrieval metrics:
+
+\begin{itemize}
+\item \textbf{MRR@k (Mean Reciprocal Rank at k):} A ranking-based metric that measures the quality of retrieval systems. For each query, MRR@k considers only the top-k retrieved documents and calculates the reciprocal of the rank position of the first relevant document. Formally, for a set of queries Q, MRR@k is defined as:
+\begin{equation}
+\text{MRR@k} = \frac{1}{|Q|} \sum_{i=1}^{|Q|} \frac{1}{\text{rank}_i}
+\end{equation}
+where $\text{rank}_i$ is the position of the first relevant document for query $i$ within the top-k results, or 0 if no relevant document appears in the top-k. Higher MRR@k values indicate better retrieval performance. We evaluate at cutoffs k=10 and k=100.
+
+\item \textbf{Inference Time:} Wall-clock time for processing 10,000 queries
+\item \textbf{Training Efficiency:} Convergence behavior and training stability
+\end{itemize}
+
+\subsection{Inference Time Measurement}
+
+Inference time measurements included:
+\begin{itemize}
+\item Query encoding time
+\item Cosine similarity computation
+\item Top-200 passage ranking
+\end{itemize}
+
+Excluded from timing measurements:
+\begin{itemize}
+\item Model loading overhead
+\item File I/O operations  
+\item Evaluation metric computation
+\end{itemize}
+
+\subsection{Embedding Space Analysis}
+
+We employed UMAP visualization to analyze embedding space geometry changes across model variants. The analysis protocol included:
+
+\begin{itemize}
+\item Random sampling of 1,000 query-passage pairs from qrels.dev.tsv
+\item Consistent UMAP parameters across all visualizations
+\item Separate encoding of queries and positive passages
+\item Visual assessment of clustering and separation patterns
+\end{itemize}
+
+This comprehensive methodology ensures that our investigation provides reliable, reproducible insights into the phenomenon of fine-tuning failures on saturated benchmarks.

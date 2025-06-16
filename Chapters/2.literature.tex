@@ -1,0 +1,85 @@
+% Chapter 2
+
+\chapter{Literature Review} % Main chapter title
+
+\label{Chapter2} % For referencing the chapter elsewhere, use \ref{Chapter2}
+
+%----------------------------------------------------------------------------------------
+
+This chapter provides a comprehensive review of the literature relevant to our investigation of fine-tuning failures in neural passage ranking. We organize our review around three key areas: neural passage ranking architectures, parameter-efficient fine-tuning methods, and embedding space analysis techniques.
+
+\section{Neural Passage Ranking}
+
+\subsection{Evolution of Ranking Architectures}
+
+The evolution of neural ranking models has progressed from early dual-encoder architectures \cite{dong2022exploring} to sophisticated cross-encoder systems \cite{lu2025crossencoder, karpukhin2020dense}. This progression represents a fundamental shift in how neural systems approach the information retrieval task.
+
+\textbf{Dual-Encoder Models:} These architectures use separate encoders for queries and documents, computing similarity through dot product or cosine similarity. The key advantage of dual-encoder models lies in their computational efficiency during inference, as document embeddings can be pre-computed and indexed. However, they sacrifice some accuracy due to the lack of query-document interaction during encoding.
+
+\textbf{Cross-Encoder Models:} These systems process query-document pairs jointly, enabling more nuanced relevance modeling through attention mechanisms that allow fine-grained interaction between query and document tokens. While computationally expensive, cross-encoders typically achieve superior ranking performance.
+
+\subsection{MS MARCO and Benchmark Evolution}
+
+The MS MARCO dataset has been instrumental in driving advances in neural ranking \cite{msmarco}. Models like DPR (Dense Passage Retrieval), ColBERT, and various BERT-based rankers have established strong baselines on this benchmark \cite{khattab2020colbert}. The dataset's scale and realistic query distribution have made it a standard evaluation framework for the information retrieval community.
+
+However, the extensive use of MS MARCO in model pre-training has created a unique challenge: many contemporary models have already been exposed to substantial portions of the evaluation data during their pre-training phase, potentially leading to benchmark saturation.
+
+\section{Parameter-Efficient Fine-Tuning}
+
+\subsection{LoRA: Low-Rank Adaptation}
+
+LoRA (Low-Rank Adaptation) has emerged as a prominent parameter-efficient fine-tuning method \cite{hu2021lora}. The core insight behind LoRA is that the weight updates during fine-tuning often have a low "intrinsic rank," meaning they can be approximated by low-rank matrices.
+
+Mathematically, LoRA represents weight updates as:
+\begin{equation}
+W' = W + \Delta W = W + BA
+\end{equation}
+
+where $W \in \mathbb{R}^{d \times k}$ is the original weight matrix, $B \in \mathbb{R}^{d \times r}$ and $A \in \mathbb{R}^{r \times k}$ are trainable low-rank matrices, and $r \ll \min(d,k)$ is the rank.
+
+\subsection{Effectiveness Across Domains}
+
+While LoRA has shown success in natural language processing tasks, its effectiveness varies significantly across tasks and domains. Information retrieval applications have received limited systematic evaluation, particularly when applied to already domain-adapted models. This gap in the literature motivates our investigation into LoRA's behavior on saturated benchmarks.
+
+\section{Embedding Space Analysis}
+
+\subsection{Geometric Understanding of Embeddings}
+
+Recent work has emphasized the importance of understanding embedding space geometry for retrieval performance \cite{reimers2019sentence}. The geometric properties of embedding spaces—such as clustering, separation, and isotropy—directly impact retrieval effectiveness.
+
+\subsection{Visualization Techniques}
+
+Visualization techniques like UMAP \cite{mcinnes2018umap} and t-SNE \cite{maaten2008visualizing} have proven valuable for diagnosing model behavior and identifying potential issues in learned representations. These methods provide intuitive insights into high-dimensional embedding spaces by projecting them into lower-dimensional visualizable spaces while preserving important structural properties.
+
+\textbf{UMAP (Uniform Manifold Approximation and Projection):} UMAP is particularly well-suited for embedding analysis as it preserves both local and global structure better than t-SNE, making it ideal for understanding the geometric changes that occur during fine-tuning.
+
+\section{Gaps in Current Literature}
+
+Despite extensive research in neural ranking and fine-tuning, several critical gaps remain:
+
+\begin{enumerate}
+\item \textbf{Saturated Benchmark Analysis:} Limited investigation into what happens when models are fine-tuned on benchmarks they have already seen during pre-training
+\item \textbf{Scale Disparity Effects:} Insufficient understanding of how scale differences between pre-training and fine-tuning affect model performance
+\item \textbf{Embedding Space Diagnostics:} Lack of systematic approaches to diagnose fine-tuning failures through embedding space analysis
+\item \textbf{Parameter-Efficient Methods on Saturated Models:} Limited evaluation of LoRA and similar methods when applied to already domain-optimized models
+\end{enumerate}
+
+\section{Theoretical Framework}
+
+\subsection{The Saturation Hypothesis}
+
+Based on the literature review, we propose the \textit{saturation hypothesis}: on benchmarks where models have already seen extensive domain-specific data during pre-training, additional fine-tuning may introduce destructive interference rather than beneficial adaptation.
+
+This hypothesis is supported by observations from transfer learning literature suggesting that over-fitting to specific tasks can degrade general capabilities, and from optimization literature indicating that multiple optimization phases can lead to suboptimal solutions.
+
+\subsection{Embedding Space Degradation Theory}
+
+We hypothesize that fine-tuning on saturated benchmarks causes progressive degradation of embedding space structure. This degradation manifests as:
+
+\begin{itemize}
+\item Loss of semantic clustering
+\item Increased uniformity in embedding distributions
+\item Reduced separability between relevant and irrelevant content
+\end{itemize}
+
+This theoretical framework guides our experimental design and analysis methodology, as detailed in subsequent chapters.
