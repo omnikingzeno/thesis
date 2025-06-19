@@ -46,10 +46,16 @@ headsepline, % Uncomment to get a line under the header
 ]{Thesis} % The class file specifying the document structure
 
 \usepackage{fontspec}
-\setmainfont{Times New Roman}
+% Use Latin Modern as a fallback - it's always available and reliable
+\setmainfont{Latin Modern Roman}[
+    Ligatures=TeX
+]
+% Alternative: If you want Times-like font, use:
+% \setmainfont{TeX Gyre Termes}[Ligatures=TeX]
 
-\usepackage[utf8]{inputenc} % Required for inputting international characters
-\usepackage[T1]{fontenc} % Output font encoding for international characters
+% Remove inputenc and fontenc for XeLaTeX - they are not needed and cause conflicts
+% \usepackage[utf8]{inputenc} % Not needed with XeLaTeX
+% \usepackage[T1]{fontenc} % Not needed with XeLaTeX
 % \usepackage{mathpazo} % Use the Palatino font by default
 \usepackage[backend=biber,
 style=numeric,

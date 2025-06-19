@@ -17,14 +17,14 @@
 
 The MS MARCO passage ranking dataset has established itself as a cornerstone benchmark for neural information retrieval systems \cite{msmarco}. With its 8.8 million passages and comprehensive query collection, it represents one of the most challenging and realistic retrieval scenarios in the field. The conventional wisdom in deep learning suggests that task-specific fine-tuning of pre-trained models should yield performance improvements over generic representations. However, our systematic investigation reveals a paradoxical situation where fine-tuning consistently degrades retrieval performance.
 
-This phenomenon becomes particularly intriguing when considering that our base model, sentence-transformers/all-MiniLM-L6-v2, was already extensively fine-tuned on over 1 billion sentence pairs, including 9,144,553 samples specifically from MS MARCO \cite{huggingface_minilm}. This extensive domain-specific pre-training established the model as highly optimized for semantic search tasks, creating a challenging baseline for further improvement.
+This phenomenon becomes particularly intriguing when considering that our base model was already extensively pre-trained on over 1 billion sentence pairs, including substantial MS MARCO data \cite{huggingface_minilm}, establishing an already-optimized baseline for semantic search tasks.
 
 \section{Research Questions}
 
 Our work addresses several critical research questions:
 
 \begin{itemize}
-\item Why does fine-tuning fail to improve upon strong, already domain-adapted baselines?
+\item Why does fine-tuning fail to improve upon the strong, already domain-adapted baselines?
 \item How do different fine-tuning approaches (full vs. parameter-efficient) affect embedding space geometry when applied to saturated models?
 \item What role do negative sampling strategies play when the base model has already seen extensive domain data?
 \item Can embedding space visualization provide insights into model behavior beyond standard evaluation metrics?
@@ -37,7 +37,7 @@ Through rigorous experimentation involving five model variants, embedding space 
 Our key contributions include:
 
 \begin{itemize}
-\item \textbf{Empirical demonstration of universal fine-tuning failure} on a saturated benchmark where the base model was pre-trained on 9.1M domain-specific samples, with performance degradations ranging from 13.5\% to 32.3\%
+\item \textbf{Empirical demonstration of universal fine-tuning failure} on a saturated benchmark where the base model was extensively pre-trained on domain-specific samples, with significant performance degradations across all variants
 \item \textbf{Scale disparity analysis} showing how focused fine-tuning experiments cannot compete with billion-scale pre-training
 \item \textbf{Diagnostic methodology} using embedding space visualization to understand model behavior beyond traditional metrics when working with pre-optimized models
 \item \textbf{Discovery of the hard negatives paradox} in saturated models, where semantically similar negatives harm rather than help performance

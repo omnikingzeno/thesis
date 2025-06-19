@@ -12,19 +12,19 @@ This chapter summarizes the key findings of our investigation into fine-tuning f
 
 \subsection{Universal Fine-Tuning Degradation}
 
-Our comprehensive investigation provides definitive evidence that conventional fine-tuning approaches consistently fail to improve upon heavily optimized baseline performance on the MS MARCO passage ranking task. All five model variants—including both full parameter fine-tuning and parameter-efficient LoRA adaptations-exhibited performance degradations ranging from 13.5\% to 32.3\% in MRR@10 compared to the base sentence-transformers/all-MiniLM-L6-v2 model.
+Our comprehensive investigation provides definitive evidence that conventional fine-tuning approaches consistently fail to improve upon heavily optimized baseline performance on the MS MARCO passage ranking task. All five model variants exhibited performance degradations ranging from 13.5\% to 32.3\% in MRR@10 compared to the base model.
 
 This finding fundamentally challenges the conventional wisdom that fine-tuning universally improves model performance, particularly when working with extensively pre-trained models that have already undergone domain-specific optimization with billion-scale data.
 
 \subsection{The Saturation Hypothesis Confirmed}
 
-Our results provide compelling evidence for the saturation hypothesis: MS MARCO represents a benchmark where our base model has achieved near-optimal performance through extensive domain-specific pre-training. The model's prior exposure to 9,144,553 MS MARCO sentence pairs during its billion-sample training regimen means that additional task-specific training with our 1M samples introduces destructive noise rather than beneficial signal.
+Our results provide compelling evidence for the saturation hypothesis: MS MARCO represents a benchmark where our base model has achieved near-optimal performance through extensive domain-specific pre-training. The model's substantial prior MS MARCO exposure during billion-scale training means that additional task-specific training introduces destructive noise rather than beneficial signal.
 
 This finding has profound implications for how the research community approaches fine-tuning on established benchmarks where models may have already seen substantial portions of the data during pre-training.
 
 \subsection{Embedding Space Degradation as Primary Failure Mode}
 
-Through systematic UMAP visualization analysis, we demonstrated that embedding space degradation serves as the primary mechanism underlying fine-tuning failure. This degradation follows a predictable pattern: from structured semantic organization in the base model (achieved through billion-scale contrastive learning) to complete uniformity in the worst-performing variants.
+Through systematic UMAP visualization analysis, we demonstrated that embedding space degradation serves as the primary mechanism underlying fine-tuning failure. This degradation follows a predictable pattern: from structured semantic organization in the base model (achieved through billion-scale contrastive learning \cite{gao2021simcse}) to complete uniformity in the worst-performing variants.
 
 The strong correlation between embedding space structure and retrieval performance validates our diagnostic methodology and suggests that geometric analysis should become standard practice in fine-tuning research.
 
@@ -97,7 +97,7 @@ Several limitations constrain the generalizability of our findings:
 \item \textbf{Single Dataset Focus:} Results may not generalize beyond MS MARCO to other retrieval tasks or less saturated domains
 \item \textbf{Training Scale Constraints:} Our 1M sample fine-tuning scale, while substantial, represents only a fraction of the base model's 1B sample pre-training
 \item \textbf{Architectural Scope:} Focus on dual-encoder models excludes comparison with cross-encoder approaches
-\item \textbf{Loss Function Limitation:} Exclusive reliance on triplet loss may not represent optimal choices for saturated model fine-tuning
+\item \textbf{Loss Function Limitation:} Exclusive reliance on triplet loss \cite{sbert_losses} may not represent optimal choices for saturated model fine-tuning
 \end{itemize}
 
 \subsection{Methodological Constraints}
@@ -126,7 +126,7 @@ Promising research directions include:
 
 \begin{itemize}
 \item \textbf{Regularization Techniques:} Develop methods to preserve pre-trained structure during fine-tuning
-\item \textbf{Alternative Loss Functions:} Investigate MultipleNegativesRankingLoss, ContrastiveLoss, and CosineSimilarityLoss for saturated models
+\item \textbf{Alternative Loss Functions:} Investigate MultipleNegativesRankingLoss, ContrastiveLoss, and CosineSimilarityLoss \cite{sbert_losses} for saturated models
 \item \textbf{Progressive Fine-Tuning:} Explore gradual adaptation strategies that minimize disruption to pre-trained representations
 \item \textbf{Ensemble Methods:} Combine multiple fine-tuning approaches to leverage their complementary strengths
 \end{itemize}

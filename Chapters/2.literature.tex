@@ -16,11 +16,11 @@ The evolution of neural ranking models has progressed from early dual-encoder ar
 
 \textbf{Dual-Encoder Models:} These architectures use separate encoders for queries and documents, computing similarity through dot product or cosine similarity. The key advantage of dual-encoder models lies in their computational efficiency during inference, as document embeddings can be pre-computed and indexed. However, they sacrifice some accuracy due to the lack of query-document interaction during encoding.
 
-\textbf{Cross-Encoder Models:} These systems process query-document pairs jointly, enabling more nuanced relevance modeling through attention mechanisms that allow fine-grained interaction between query and document tokens. While computationally expensive, cross-encoders typically achieve superior ranking performance.
+\textbf{Cross-Encoder Models:} These systems process query-document pairs jointly, enabling more nuanced relevance modeling through attention mechanisms \cite{vaswani2017attention} that allow fine-grained interaction between query and document tokens. While computationally expensive, cross-encoders typically achieve superior ranking performance.
 
 \subsection{MS MARCO and Benchmark Evolution}
 
-The MS MARCO dataset has been instrumental in driving advances in neural ranking \cite{msmarco}. Models like DPR (Dense Passage Retrieval), ColBERT, and various BERT-based rankers have established strong baselines on this benchmark \cite{khattab2020colbert}. The dataset's scale and realistic query distribution have made it a standard evaluation framework for the information retrieval community.
+The MS MARCO dataset has been instrumental in driving advances in neural ranking \cite{msmarco}. Models like DPR (Dense Passage Retrieval), ColBERT, and various BERT-based rankers \cite{devlin2018bert} have established strong baselines on this benchmark \cite{khattab2020colbert}. The dataset's scale and realistic query distribution have made it a standard evaluation framework for the information retrieval community.
 
 However, the extensive use of MS MARCO in model pre-training has created a unique challenge: many contemporary models have already been exposed to substantial portions of the evaluation data during their pre-training phase, potentially leading to benchmark saturation.
 
@@ -49,9 +49,7 @@ Recent work has emphasized the importance of understanding embedding space geome
 
 \subsection{Visualization Techniques}
 
-Visualization techniques like UMAP \cite{mcinnes2018umap} and t-SNE \cite{maaten2008visualizing} have proven valuable for diagnosing model behavior and identifying potential issues in learned representations. These methods provide intuitive insights into high-dimensional embedding spaces by projecting them into lower-dimensional visualizable spaces while preserving important structural properties.
-
-\textbf{UMAP (Uniform Manifold Approximation and Projection):} UMAP is particularly well-suited for embedding analysis as it preserves both local and global structure better than t-SNE, making it ideal for understanding the geometric changes that occur during fine-tuning.
+Visualization techniques like UMAP \cite{mcinnes2018umap} and t-SNE \cite{maaten2008visualizing} have proven valuable for diagnosing model behavior and identifying potential issues in learned representations by projecting high-dimensional embedding spaces into interpretable visualizations.
 
 \section{Gaps in Current Literature}
 

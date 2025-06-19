@@ -72,7 +72,7 @@ This methodology creates challenging negative examples that are likely to be sem
 
 \subsection{Base Model Architecture}
 
-The sentence-transformers/all-MiniLM-L6-v2 model employs a dual-encoder Siamese network architecture \cite{dong2022exploring} with the following mathematical formulation:
+The sentence-transformers/all-MiniLM-L6-v2 model employs a dual-encoder Siamese network architecture \cite{dong2022exploring, bromley1993signature} with the following mathematical formulation:
 
 \begin{equation}
 E_q = \text{MiniLM}(q), \quad E_p = \text{MiniLM}(p)
@@ -86,7 +86,7 @@ where $E_q$ and $E_p$ represent 384-dimensional embeddings for query $q$ and pas
 
 The model architecture consists of:
 \begin{itemize}
-\item 6 transformer layers
+\item 6 transformer layers \cite{vaswani2017attention}
 \item 384 hidden dimensions  
 \item 12 attention heads
 \item 22.7 million total parameters
@@ -95,13 +95,13 @@ The model architecture consists of:
 
 \subsection{Pre-training Exposure Analysis}
 
-Critically, this model underwent extensive domain-specific fine-tuning using self-supervised contrastive learning objectives on over 1 billion sentence pairs \cite{huggingface_minilm}. The training procedure utilized:
+Critically, this model underwent extensive domain-specific fine-tuning using self-supervised contrastive learning objectives \cite{gao2021simcse} on over 1 billion sentence pairs \cite{huggingface_minilm}. The training procedure utilized:
 
 \begin{itemize}
 \item \textbf{Hardware:} 7 TPU v3-8 cores for efficient computation
 \item \textbf{Pre-training steps:} 100,000 with batch size 1,024
 \item \textbf{MS MARCO exposure:} 9,144,553 sentence pairs specifically from MS MARCO
-\item \textbf{Learning strategy:} Contrastive learning with cross-entropy loss and learning rate warm-up
+\item \textbf{Learning strategy:} Contrastive learning \cite{gao2021simcse} with cross-entropy loss and learning rate warm-up
 \end{itemize}
 
 This extensive pre-training established the model as highly optimized for semantic search tasks, particularly those involving MS MARCO-style query-passage relationships.
@@ -140,7 +140,7 @@ The 3.9\% figure represents the proportion of trainable LoRA parameters relative
 
 \textbf{LoRA Trainable Parameters:}
 
-In LoRA fine-tuning, the number of trainable parameters depends on the rank ($r$) and the number of affected matrices. Since LoRA modifies the query and value projection matrices in the multi-head attention mechanism, we calculate the total parameters when rank = 16.
+In LoRA fine-tuning, the number of trainable parameters depends on the rank ($r$) and the number of affected matrices. Since LoRA modifies the query and value projection matrices in the multi-head attention mechanism \cite{vaswani2017attention}, we calculate the total parameters when rank = 16.
 
 Each query and value projection matrix in MiniLM-L6-v2 has a shape of $384 \times 384$ per attention head. LoRA replaces these with low-rank matrices of shape $384 \times 16$ and $16 \times 384$, meaning each head contributes:
 
@@ -160,11 +160,33 @@ Since there are 12 attention heads per layer and 6 layers, the total number of t
 
 This parameter efficiency demonstrates LoRA's ability to achieve task adaptation with minimal parameter overhead while preserving the original model's knowledge.
 
+\subsection{Training Objective: Triplet Loss Selection}
+
+Our choice of triplet loss as the primary training objective was motivated by two key factors that align with our research design and objectives.
+
+\subsubsection{Data Structure Alignment}
+
+Our experimental design explicitly constructs triplets in the form $(q, p^+, p^-)$ where $q$ represents the query, $p^+$ is the positive (relevant) passage, and $p^-$ is the negative (non-relevant) passage. This data structure maps directly to triplet loss formulation, which is specifically designed for scenarios involving anchor-positive-negative relationships. 
+
+The triplet loss objective ensures that the embedding space learns to place positive passages closer to their corresponding queries than negative passages by a specified margin:
+
+\begin{equation}
+\mathcal{L}_{triplet} = \max(0, ||E_q - E_{p^+}||^2 - ||E_q - E_{p^-}||^2 + \text{margin})
+\end{equation}
+
+where $E_q$, $E_{p^+}$, and $E_{p^-}$ represent the embeddings for query, positive passage, and negative passage respectively.
+
+\subsubsection{Research Focus on Negative Sampling}
+
+Our core research investigation centers on comparing the effectiveness of hard versus random negative sampling strategies on saturated models. Triplet loss provides an ideal framework for this comparison because it incorporates an explicit negative example in each training instance, allowing direct evaluation of negative quality and its impact on model performance.
+
+This design choice was essential for discovering the "hard negatives paradox" where semantically similar but non-relevant passages (hard negatives) actually harm performance more than randomly sampled negatives when applied to extensively pre-trained models. Alternative loss functions that aggregate multiple negatives or use different sampling strategies would have obscured this critical finding.
+
 \section{Infrastructure and Computational Setup}
 
 \subsection{Hardware Configuration}
 
-All experiments were conducted on a remote system provided by Modal.com featuring:
+All experiments were conducted on a remote system provided by Modal.com \cite{modal2023} featuring:
 \begin{itemize}
 \item NVIDIA A100 80GB GPU
 \item 1.2TB RAM
@@ -178,7 +200,7 @@ This high-performance setup provided substantial computational capability for ou
 Consistent training hyperparameters were maintained across all fine-tuning experiments to ensure fair comparison:
 
 \begin{itemize}
-\item \textbf{Optimizer:} AdamW with $\beta_1=0.9, \beta_2=0.999$
+\item \textbf{Optimizer:} AdamW \cite{loshchilov2017decoupled} with $\beta_1=0.9, \beta_2=0.999$
 \item \textbf{Learning rate:} 2e-5 with linear warmup (1,000 steps)
 \item \textbf{Batch size:} 128 (limited by GPU memory constraints)
 \item \textbf{Epochs:} 5 for Full FT (Hard), 3 for all others
