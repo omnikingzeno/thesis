@@ -46,94 +46,19 @@ These findings challenge assumptions about LoRA's deployment advantages and sugg
 
 \section{Theoretical Contributions}
 
-\subsection{Scale Disparity Theory}
-
-Our work establishes a theoretical framework for understanding the effects of scale disparity between pre-training and fine-tuning phases. When fine-tuning datasets are orders of magnitude smaller than pre-training data, the optimization landscape may already be near-optimal for the target domain, making further improvements through conventional fine-tuning approaches unlikely.
-
-This theory explains why billion-scale pre-training creates such robust baselines that focused fine-tuning experiments cannot meaningfully improve upon them.
-
-\subsection{Embedding Space Diagnostics Framework}
-
-We introduced a systematic methodology for diagnosing fine-tuning failures through embedding space analysis. The framework includes:
-
-\begin{itemize}
-\item UMAP visualization protocols for embedding space assessment
-\item Quantitative metrics for measuring clustering quality and space utilization
-\item Correlation analysis between geometric properties and retrieval performance
-\end{itemize}
-
-This framework provides researchers with tools to understand model behavior beyond traditional performance metrics.
+Our work establishes a theoretical framework for understanding scale disparity effects between pre-training and fine-tuning phases, explaining why billion-scale pre-training creates robust baselines that focused fine-tuning cannot improve upon. We also introduced a systematic methodology for diagnosing fine-tuning failures through embedding space analysis, providing tools to understand model behavior beyond traditional metrics.
 
 \section{Practical Implications}
 
-\subsection{For Information Retrieval Practitioners}
+Our findings suggest practitioners should consider pre-training exposure when evaluating fine-tuning effectiveness, recognize that extensively pre-trained models may already provide optimal performance, and incorporate embedding space analysis into evaluation pipelines. Model developers should focus on architectural improvements rather than parameter tuning for saturated benchmarks.
 
-Our findings have several immediate practical implications:
+\section{Limitations}
 
-\begin{itemize}
-\item \textbf{Benchmark Evaluation:} Consider pre-training exposure when evaluating fine-tuning effectiveness on established benchmarks
-\item \textbf{Model Selection:} Extensively pre-trained models may already provide optimal performance for their target domains
-\item \textbf{Computational Planning:} Parameter-efficient methods may not provide expected computational benefits in production environments
-\item \textbf{Diagnostic Tools:} Incorporate embedding space analysis into model evaluation pipelines
-\end{itemize}
-
-\subsection{For Model Developers}
-
-Model developers should consider:
-
-\begin{itemize}
-\item \textbf{Pre-training Documentation:} Clearly document domain exposure during pre-training to guide downstream fine-tuning decisions
-\item \textbf{Architectural Innovation:} Focus on architectural improvements rather than parameter tuning for saturated benchmarks
-\item \textbf{Evaluation Frameworks:} Develop evaluation protocols that account for pre-training exposure
-\end{itemize}
-
-\section{Limitations and Constraints}
-
-\subsection{Experimental Limitations}
-
-Several limitations constrain the generalizability of our findings:
-
-\begin{itemize}
-\item \textbf{Single Dataset Focus:} Results may not generalize beyond MS MARCO to other retrieval tasks or less saturated domains
-\item \textbf{Training Scale Constraints:} Our 1M sample fine-tuning scale, while substantial, represents only a fraction of the base model's 1B sample pre-training
-\item \textbf{Architectural Scope:} Focus on dual-encoder models excludes comparison with cross-encoder approaches
-\item \textbf{Loss Function Limitation:} Exclusive reliance on triplet loss \cite{sbert_losses} may not represent optimal choices for saturated model fine-tuning
-\end{itemize}
-
-\subsection{Methodological Constraints}
-
-\begin{itemize}
-\item \textbf{Time Constraints:} Practical training duration limitations influenced experimental scope
-\item \textbf{Negative Selection:} Alternative hard negative mining approaches remain unexplored
-\item \textbf{Hyperparameter Exploration:} Limited exploration of alternative hyperparameter configurations
-\end{itemize}
+Key limitations include single dataset focus (MS MARCO), scale constraints (1M vs 1B samples), focus on dual-encoder models excluding cross-encoders, and exclusive reliance on triplet loss. These constraints limit generalizability but provide clear directions for future work.
 
 \section{Future Research Directions}
 
-\subsection{Cross-Domain Generalization Studies}
-
-Future investigations should examine:
-
-\begin{itemize}
-\item \textbf{Less Saturated Benchmarks:} Evaluate fine-tuning effectiveness on domains with limited pre-training exposure
-\item \textbf{Cross-Domain Transfer:} Investigate transfer learning effectiveness across different retrieval domains
-\item \textbf{Temporal Dynamics:} Study how fine-tuning effectiveness changes as benchmarks become more saturated over time
-\end{itemize}
-
-\subsection{Alternative Fine-Tuning Approaches}
-
-Promising research directions include:
-
-\begin{itemize}
-\item \textbf{Regularization Techniques:} Develop methods to preserve pre-trained structure during fine-tuning
-\item \textbf{Alternative Loss Functions:} Investigate MultipleNegativesRankingLoss, ContrastiveLoss, and CosineSimilarityLoss \cite{sbert_losses} for saturated models
-\item \textbf{Progressive Fine-Tuning:} Explore gradual adaptation strategies that minimize disruption to pre-trained representations
-\item \textbf{Ensemble Methods:} Combine multiple fine-tuning approaches to leverage their complementary strengths
-\end{itemize}
-
-\subsection{Architectural Innovations}
-
-Future work should explore:
+Future investigations should examine less saturated benchmarks, explore regularization techniques to preserve pre-trained structure, investigate alternative loss functions, and develop hybrid architectures combining sparse and dense retrieval methods. Advanced diagnostic tools for real-time embedding space monitoring would also be valuable.
 
 \begin{itemize}
 \item \textbf{Hybrid Architectures:} Combine sparse retrieval methods like BM25 with dense retrieval for improved performance
@@ -152,45 +77,8 @@ Advanced diagnostic tools should include:
 \end{itemize}
 
 \subsection{Benchmark Evolution}
+\section{Broader Impact}
 
-The community should consider:
+Our findings suggest a fundamental paradigm shift from parameter tuning to architectural innovation, emphasizing efficient use of existing knowledge rather than simply scaling up. This investigation demonstrates that conventional wisdom about fine-tuning universality does not hold for extensively pre-trained models on saturated benchmarks.
 
-\begin{itemize}
-\item \textbf{Saturation-Aware Benchmarks:} Develop evaluation frameworks that account for pre-training exposure
-\item \textbf{Dynamic Benchmarks:} Create benchmarks that evolve to maintain challenge levels as models improve
-\item \textbf{Fairness Metrics:} Establish metrics that assess fine-tuning effectiveness relative to pre-training exposure
-\end{itemize}
-
-\section{Broader Impact on Information Retrieval}
-
-\subsection{Paradigm Shift Implications}
-
-Our findings suggest a fundamental paradigm shift in how the information retrieval community approaches model improvement:
-
-\begin{itemize}
-\item \textbf{From Parameter Tuning to Architectural Innovation:} Focus on novel architectures rather than optimizing existing ones
-\item \textbf{From Scale to Efficiency:} Emphasize efficient use of existing knowledge rather than simply scaling up
-\item \textbf{From Performance to Understanding:} Prioritize understanding model behavior over maximizing benchmark scores
-\end{itemize}
-
-\subsection{Long-Term Research Strategy}
-
-The community should consider:
-
-\begin{itemize}
-\item \textbf{Sustainable Research Practices:} Develop approaches that don't require massive computational resources
-\item \textbf{Collaborative Benchmarking:} Create shared frameworks for evaluating fine-tuning effectiveness
-\item \textbf{Transparency Standards:} Establish requirements for documenting pre-training exposure in published research
-\end{itemize}
-
-\section{Final Thoughts}
-
-This investigation demonstrates that the conventional wisdom about fine-tuning universality does not hold when working with extensively pre-trained models on saturated benchmarks. Instead of viewing this as a limitation, the research community should embrace this finding as an opportunity to develop more sophisticated approaches to model improvement.
-
-The challenge of improving upon models pre-trained on billion-scale data, including substantial domain-specific content, represents a new frontier in machine learning research. Success in this area will require moving beyond traditional optimization approaches toward architectural innovation, improved understanding of model behavior, and development of more nuanced evaluation frameworks.
-
-Our work provides a foundation for this new research direction by establishing both the empirical evidence for fine-tuning limitations and the diagnostic tools necessary to understand and address these limitations. As the field continues to evolve, these insights will become increasingly important for developing effective, efficient, and interpretable information retrieval systems.
-
-The future of neural information retrieval lies not in optimizing existing models to death, but in understanding their limits and developing innovative approaches that transcend these limitations while building upon the substantial progress already achieved through large-scale pre-training efforts.
-
-
+The challenge of improving upon billion-scale pre-trained models represents a new frontier requiring architectural innovation and improved understanding of model behavior. Our work provides both empirical evidence for fine-tuning limitations and diagnostic tools necessary to address these limitations, establishing a foundation for future research in neural information retrieval systems.

@@ -4,13 +4,11 @@
 
 %----------------------------------------------------------------------------------------
 
-This chapter presents our comprehensive experimental results and analysis. We organize our findings around four key areas: retrieval performance evaluation, computational efficiency analysis, embedding space structural changes, and training dynamics investigation.
+This chapter presents our experimental results organized around retrieval performance, computational efficiency, embedding space changes, and training dynamics.
 
 \section{Retrieval Performance Results}
 
-\subsection{Mean Reciprocal Rank Analysis}
-
-Table~\ref{tab:mrr_detailed_thesis} presents comprehensive MRR results across all model variants. The striking finding is that all fine-tuning approaches underperform the base model, with degradations ranging from 13.5\% to 32.3\% in MRR@10.
+Table~\ref{tab:mrr_detailed_thesis} shows all fine-tuning approaches underperform the base model, with MRR@10 degradations ranging from 13.5\% to 32.3\%.
 
 \begin{table}[h]
 \centering
@@ -39,16 +37,9 @@ Several critical patterns emerge from these results:
 \item \textbf{LoRA Vulnerability:} LoRA shows greater sensitivity to hard negatives than full fine-tuning, with catastrophic degradation (-32.3\%)
 \item \textbf{Scale Mismatch Impact:} Our 1M sample fine-tuning datasets, while substantial, are dwarfed by the base model's 1B sample pre-training
 \end{itemize}
-
-\subsection{Performance Consistency}
-
-The consistency of degradation across different fine-tuning approaches provides evidence for systematic rather than random effects. All fine-tuning variants show substantial performance decreases compared to the base model.
-
 \section{Computational Efficiency Analysis}
 
-\subsection{Inference Time Results}
-
-Table~\ref{tab:inference_detailed_thesis} reveals unexpected computational overhead patterns, particularly for LoRA-based models.
+Table~\ref{tab:inference_detailed_thesis} reveals LoRA models exhibit approximately 2× slower inference despite parameter efficiency, highlighting hidden computational costs in adapter architectures.
 
 \begin{table}[h]
 \centering
@@ -67,26 +58,9 @@ LoRA FT (Hard) & 598.69 & +97.0\% & 16.7 \\
 \end{tabular}
 \end{table}
 
-\subsection{Computational Overhead Analysis}
+\section{Embedding Space Analysis}
 
-The LoRA models exhibit approximately 2× slower inference despite their parameter efficiency. This counterintuitive result highlights hidden computational costs in adapter architectures that challenge conventional wisdom about their deployment advantages.
-
-\textbf{Root Cause Analysis:} The computational overhead in LoRA models stems from:
-\begin{itemize}
-\item Additional matrix multiplications for low-rank adaptations
-\item Memory access patterns that are less cache-efficient
-\item Increased computational graph complexity during forward passes
-\end{itemize}
-
-\subsection{Training Efficiency Metrics}
-
-Our experiments demonstrate that while LoRA fine-tuning appears more efficient during training, the overall computational cost must consider inference overhead and deployment implications. When considering the total cost including inference overhead, LoRA's apparent training efficiency is offset by its deployment costs.
-
-\section{Embedding Space Structural Analysis}
-
-\subsection{UMAP Visualization Results}
-
-Figure~\ref{fig:umap_all_thesis} presents UMAP projections of 1,000 randomly sampled query-passage pairs across all model variants, revealing dramatic structural differences and progressive embedding space degradation.
+Figure~\ref{fig:umap_all_thesis} shows UMAP projections revealing progressive embedding space degradation from structured semantic organization in the base model to uniformity in fine-tuned variants.
 
 \begin{figure*}[p]
 \centering
@@ -137,23 +111,11 @@ Figure~\ref{fig:umap_all_thesis} presents UMAP projections of 1,000 randomly sam
 \label{fig:umap_all_thesis}
 \end{figure*}
 
-\subsection{Embedding Space Degradation Analysis}
-
-The visualization reveals a clear degradation progression:
-
-\begin{enumerate}
-\item \textbf{Base Model (Figure~\ref{fig:umap_base_thesis}):} Well-structured semantic organization with distinct clusters and clear boundaries between different semantic regions
-\item \textbf{Full FT Random (Figure~\ref{fig:umap_full_random_thesis}):} Island formations indicating preserved clustering but altered geometric relationships
-\item \textbf{Full FT Hard (Figure~\ref{fig:umap_full_hard_thesis}):} Increased uniformity showing moderate flattening of the embedding space
-\item \textbf{LoRA Random (Figure~\ref{fig:umap_lora_random_thesis}):} Reduced semantic differentiation with compressed clustering patterns
-\item \textbf{LoRA Hard (Figure~\ref{fig:umap_lora_hard_thesis}):} Complete uniformity demonstrating catastrophic embedding space collapse
-\end{enumerate}
+The visualization reveals a clear degradation progression: from well-structured semantic organization in the base model to complete uniformity in LoRA Hard, demonstrating how fine-tuning progressively degrades embedding space structure.
 
 \section{Training Dynamics Analysis}
 
-\subsection{Loss Convergence Patterns}
-
-Figure~\ref{fig:training_curves_thesis} illustrates the training loss trajectories for all four fine-tuned models, providing insights into convergence behavior and optimization challenges.
+Figure~\ref{fig:training_curves_thesis} shows training loss trajectories, with LoRA Hard exhibiting training instability and poor convergence, while Full FT Random achieves smooth optimization.
 
 \begin{figure*}[t]
 \centering
@@ -234,31 +196,6 @@ The strong correlation between embedding space degradation (visualized through U
 
 \section{Synthesis and Interpretation}
 
-\subsection{RQ1: Fine-Tuning Effectiveness on Saturated Benchmarks}
+Our investigation reveals that all fine-tuning approaches underperformed the base model, providing evidence of fine-tuning limitations on saturated benchmarks. Hard negatives consistently harmed performance more than random negatives, revealing a paradox when applied to extensively pre-trained models. UMAP visualizations demonstrate progressive degradation from structured semantic organization to uniform distributions, with geometric changes correlating with performance degradation. LoRA models exhibited 2× slower inference despite parameter efficiency, revealing hidden computational costs.
 
-Our investigation reveals that all fine-tuning approaches underperformed the base model with statistical significance, providing clear evidence of fine-tuning limitations on saturated benchmarks where the base model already achieved high domain-specific optimization.
-
-\subsection{RQ2: Impact of Negative Sampling Strategies}
-
-Hard negatives consistently harmed performance more than random negatives across both fine-tuning approaches, revealing the paradoxical nature of sophisticated negative sampling when applied to models that have already seen extensive domain data during pre-training.
-
-\subsection{RQ3: Geometric Understanding of Performance Degradation}
-
-UMAP visualizations clearly demonstrate progressive degradation from structured semantic organization to uniform distributions, with the geometric changes strongly correlating with performance degradation patterns.
-
-\subsection{RQ4: Computational Implications of Parameter-Efficient Methods}
-
-LoRA models exhibited approximately 2× slower inference despite parameter efficiency, revealing previously hidden computational costs in adapter architectures that challenge deployment assumptions.
-
-\section{Implications for Information Retrieval}
-
-These results have significant implications for the information retrieval community:
-
-\begin{itemize}
-\item \textbf{Benchmark Saturation Awareness:} Researchers must consider pre-training exposure when evaluating fine-tuning effectiveness
-\item \textbf{Diagnostic Tool Adoption:} Embedding space analysis should complement traditional performance metrics
-\item \textbf{Computational Cost Assessment:} Parameter efficiency does not guarantee computational efficiency in deployment
-\item \textbf{Negative Sampling Strategy:} Traditional hard negative mining may be counterproductive on saturated benchmarks
-\end{itemize}
-
-This comprehensive analysis provides robust evidence for the limitations of conventional fine-tuning approaches on heavily pre-trained models and establishes a framework for understanding these limitations through both performance and diagnostic metrics.
+These results suggest researchers must consider pre-training exposure when evaluating fine-tuning effectiveness, adopt embedding space analysis alongside traditional metrics, and recognize that parameter efficiency does not guarantee computational efficiency in deployment.

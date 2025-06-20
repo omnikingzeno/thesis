@@ -18,15 +18,7 @@ To support reproducibility and further research, we provide open access to:
 \item \textbf{Visualization Code:} UMAP generation and analysis scripts in repository
 \end{itemize}
 
-\subsection{Software Environment}
-
-All experiments were conducted using:
-\begin{itemize}
-\item \textbf{Python Version:} 3.11.5 (CPython)
-\item \textbf{Exact Requirements:} Complete dependency specifications and exact package versions for each fine-tuned model variant are available in the requirements files at the code repository: \url{https://github.com/omnikingzeno/ms-marco-fine-tuning-experiments}
-\end{itemize}
-
-This chapter presents our comprehensive experimental methodology for investigating fine-tuning failures on the MS MARCO passage ranking task. We detail our dataset construction, model configurations, training procedures, and evaluation protocols.
+This chapter presents our experimental methodology for investigating fine-tuning failures on the MS MARCO passage ranking task, detailing dataset construction, model configurations, training procedures, and evaluation protocols.
 
 \section{Dataset and Preprocessing}
 
@@ -34,20 +26,14 @@ This chapter presents our comprehensive experimental methodology for investigati
 
 The MS MARCO passage ranking dataset comprises 8,841,823 passages extracted from web documents, with 1,010,916 training queries and sparse relevance judgments \cite{msmarco}. Each query is associated with one or more relevant passages, creating a challenging retrieval scenario where systems must identify relevant content from a large corpus.
 
-For our experiments, we utilized:
-\begin{itemize}
-\item \textbf{Training queries:} 808,731 unique queries from queries.train.tsv
-\item \textbf{Collection:} 8,841,823 passages from collection.tsv
-\item \textbf{Evaluation:} qrels.dev.tsv containing 55,578 query-passage relevance judgments
-\end{itemize}
+For our experiments, we utilized 808,731 unique training queries, the full passage collection, and 55,578 query-passage relevance judgments for evaluation.
 
 \subsection{Dataset Construction Strategy}
 
-Given the computational constraints and research objectives, we constructed two distinct training datasets to investigate the impact of negative sampling strategies on an already domain-adapted model.
+We constructed two distinct training datasets to investigate negative sampling strategy impacts on domain-adapted models:
 
 \subsubsection{Random Negatives Dataset}
-
-We randomly sampled 1 million triplets from the original triples.train.small.tsv file, maintaining the distribution of queries and ensuring diverse negative examples. This approach follows standard practice in neural ranking literature and provides a baseline for negative sampling effectiveness.
+We randomly sampled 1 million triplets from the original triples.train.small.tsv file, maintaining query distribution and ensuring diverse negative examples following standard neural ranking practices.
 
 The random sampling process ensured:
 \begin{itemize}
