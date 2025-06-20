@@ -66,13 +66,13 @@ Despite extensive research in neural ranking and fine-tuning, several critical g
 
 \subsection{The Saturation Hypothesis}
 
-Based on the literature review, we propose the \textit{saturation hypothesis}: on benchmarks where models have already seen extensive domain-specific data during pre-training, additional fine-tuning may introduce destructive interference rather than beneficial adaptation.
+Based on the literature review, we explore the \textit{saturation hypothesis}: on benchmarks where models have already seen extensive domain-specific data during pre-training, additional fine-tuning may introduce destructive interference rather than beneficial adaptation.
 
-This hypothesis is supported by observations from transfer learning literature suggesting that over-fitting to specific tasks can degrade general capabilities, and from optimization literature indicating that multiple optimization phases can lead to suboptimal solutions.
+This concept is supported by observations from transfer learning literature suggesting that over-fitting to specific tasks can degrade general capabilities, and from optimization literature indicating that multiple optimization phases can lead to suboptimal solutions.
 
-\subsection{Embedding Space Degradation Theory}
+\subsection{Embedding Space Analysis Framework}
 
-We hypothesize that fine-tuning on saturated benchmarks causes progressive degradation of embedding space structure. This degradation manifests as:
+Our investigation examines whether fine-tuning on saturated benchmarks causes progressive degradation of embedding space structure, potentially manifesting as:
 
 \begin{itemize}
 \item Loss of semantic clustering

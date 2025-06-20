@@ -65,44 +65,42 @@ By visualizing embedding spaces before and after fine-tuning, we can directly ob
 
 \subsection{Computational Efficiency Analysis}
 
-Beyond traditional performance metrics, we propose comprehensive computational efficiency analysis including:
+Beyond traditional performance metrics, we propose computational efficiency analysis including:
 
 \begin{itemize}
-\item Wall-clock inference time measurements
-\item Queries per second (QPS) calculations
-\item Memory usage profiling
-\item Training time and convergence analysis
+\item Inference time measurements and QPS calculations
+\item Training loss convergence patterns
 \end{itemize}
 
-This analysis will reveal hidden costs in parameter-efficient methods that may not be apparent from parameter counts alone.
+This analysis will reveal hidden computational costs in parameter-efficient methods that may not be apparent from parameter counts alone.
 
-\section{Hypotheses}
+\section{Research Questions}
 
-Based on our analysis of the research gaps, we formulate the following testable hypotheses:
+Our investigation was motivated by unexpected preliminary findings where fine-tuning approaches consistently underperformed the base model. This counterintuitive result led us to formulate the following research questions:
 
-\subsection{H1: Universal Fine-Tuning Degradation}
+\subsection{RQ1: Fine-Tuning Effectiveness on Saturated Benchmarks}
 
-\textit{All fine-tuning approaches will underperform the base model on MS MARCO due to the model's extensive prior exposure to the domain during pre-training.}
+\textit{Why do fine-tuning approaches underperform the base model on MS MARCO despite the conventional wisdom that fine-tuning improves performance?}
 
-This hypothesis challenges the conventional assumption that fine-tuning universally improves performance and suggests that saturated benchmarks require different evaluation frameworks.
+This question challenges the universal applicability of fine-tuning and investigates the specific conditions under which it may fail.
 
-\subsection{H2: Hard Negatives Paradox}
+\subsection{RQ2: Impact of Negative Sampling Strategies}
 
-\textit{Hard negative sampling, typically beneficial for retrieval tasks, will harm performance more than random negative sampling when applied to saturated models.}
+\textit{How do different negative sampling strategies affect performance when applied to models that have already seen extensive domain data during pre-training?}
 
-This hypothesis suggests that sophisticated negative sampling strategies may introduce harmful noise when models have already learned optimal representations for the domain.
+This question explores whether sophisticated negative sampling approaches provide benefits or introduce harmful noise in saturated scenarios.
 
-\subsection{H3: Embedding Space Degradation}
+\subsection{RQ3: Geometric Understanding of Performance Degradation}
 
-\textit{Fine-tuning will cause progressive degradation of embedding space structure, manifesting as increased uniformity and loss of semantic clustering.}
+\textit{What changes occur in embedding space geometry during fine-tuning that correlate with performance degradation?}
 
-This hypothesis proposes a geometric explanation for fine-tuning failures that can be visualized and quantified through embedding space analysis.
+This question seeks to provide a geometric explanation for the observed performance failures through embedding space analysis.
 
-\subsection{H4: LoRA Computational Overhead}
+\subsection{RQ4: Computational Implications of Parameter-Efficient Methods}
 
-\textit{LoRA models will exhibit unexpected computational overhead during inference despite their parameter efficiency.}
+\textit{What are the real-world computational costs of parameter-efficient methods beyond simple parameter counting?}
 
-This hypothesis challenges assumptions about the deployment advantages of parameter-efficient methods.
+This question investigates the deployment implications of methods like LoRA in production environments.
 
 \section{Evaluation Framework}
 

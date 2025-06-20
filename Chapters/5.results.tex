@@ -232,21 +232,23 @@ The strong correlation between embedding space degradation (visualized through U
 
 \section{Validation of Hypotheses}
 
-\subsection{H1: Universal Fine-Tuning Degradation - CONFIRMED}
+\section{Synthesis and Interpretation}
 
-All fine-tuning approaches underperformed the base model with statistical significance, confirming our hypothesis about saturated benchmark effects.
+\subsection{RQ1: Fine-Tuning Effectiveness on Saturated Benchmarks}
 
-\subsection{H2: Hard Negatives Paradox - CONFIRMED}
+Our investigation reveals that all fine-tuning approaches underperformed the base model with statistical significance, providing clear evidence of fine-tuning limitations on saturated benchmarks where the base model already achieved high domain-specific optimization.
 
-Hard negatives consistently harmed performance more than random negatives across both fine-tuning approaches, confirming the paradoxical nature of sophisticated negative sampling on saturated models.
+\subsection{RQ2: Impact of Negative Sampling Strategies}
 
-\subsection{H3: Embedding Space Degradation - CONFIRMED}
+Hard negatives consistently harmed performance more than random negatives across both fine-tuning approaches, revealing the paradoxical nature of sophisticated negative sampling when applied to models that have already seen extensive domain data during pre-training.
 
-UMAP visualizations clearly show progressive degradation from structured semantic organization to uniform distributions, with quantitative metrics supporting these observations.
+\subsection{RQ3: Geometric Understanding of Performance Degradation}
 
-\subsection{H4: LoRA Computational Overhead - CONFIRMED}
+UMAP visualizations clearly demonstrate progressive degradation from structured semantic organization to uniform distributions, with the geometric changes strongly correlating with performance degradation patterns.
 
-LoRA models exhibited approximately 2× slower inference despite parameter efficiency, revealing hidden computational costs in adapter architectures.
+\subsection{RQ4: Computational Implications of Parameter-Efficient Methods}
+
+LoRA models exhibited approximately 2× slower inference despite parameter efficiency, revealing previously hidden computational costs in adapter architectures that challenge deployment assumptions.
 
 \section{Implications for Information Retrieval}
 
