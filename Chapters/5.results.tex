@@ -192,8 +192,6 @@ The consistent underperformance across all variants strongly suggests that the f
 
 The strong correlation between embedding space degradation (visualized through UMAP) and performance degradation (measured through MRR) validates our diagnostic methodology. This correlation suggests that embedding space analysis should become standard practice in fine-tuning research, particularly when working with pre-optimized models.
 
-\section{Validation of Hypotheses}
-
 \section{Synthesis and Interpretation}
 
 Our investigation reveals that all fine-tuning approaches underperformed the base model, providing evidence of fine-tuning limitations on saturated benchmarks. Hard negatives consistently harmed performance more than random negatives, revealing a paradox when applied to extensively pre-trained models. UMAP visualizations demonstrate progressive degradation from structured semantic organization to uniform distributions, with geometric changes correlating with performance degradation. LoRA models exhibited 2× slower inference despite parameter efficiency, revealing hidden computational costs.
