@@ -60,6 +60,13 @@ This methodology creates challenging negative examples that are likely to be sem
 
 The sentence-transformers/all-MiniLM-L6-v2 model employs a dual-encoder Siamese network architecture \cite{dong2022exploring, bromley1993signature} with the following mathematical formulation:
 
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.8\textwidth]{architecture_diagram.png}
+\caption{Dual-encoder Siamese network architecture employed by the sentence-transformers/all-MiniLM-L6-v2 model. The architecture shows parallel encoding of queries and passages through shared MiniLM transformer layers, followed by cosine similarity computation for relevance scoring. This symmetric design enables efficient pre-computation of passage embeddings for large-scale retrieval.}
+\label{fig:model_architecture}
+\end{figure}
+
 \begin{equation}
 E_q = \text{MiniLM}(q), \quad E_p = \text{MiniLM}(p)
 \end{equation}

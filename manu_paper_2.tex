@@ -67,6 +67,13 @@ For our experiments, we utilized:
 \subsection{Base Model Architecture and Pre-training}
 The sentence-transformers/all-MiniLM-L6-v2 model employs a dual-encoder Siamese network architecture \cite{dong2022exploring} with the following characteristics:
 
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.8\columnwidth]{architecture_diagram.png}
+\caption{Dual-encoder Siamese network architecture showing query and passage encoding through shared MiniLM transformer, followed by cosine similarity computation for relevance scoring.}
+\label{fig:architecture}
+\end{figure}
+
 \begin{equation}
 E_q = \text{MiniLM}(q), \quad E_p = \text{MiniLM}(p)
 \end{equation}
